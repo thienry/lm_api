@@ -9,14 +9,17 @@ services:
   
   db:
     image: postgres
-    container_name: lm-database
+    container_name: lm-db
     restart: always
     tty: true
+    ports:
+      - '5432:5432'
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - PGDATA=/var/lib/postgresql/data/pgdata 
-    ports:
-      - '5432:5432'
+      - POSTGRES_DB=locale-mapper
     volumes: 
-      - .data:/var/lib/postgresql/data/
+      - pgdata:/data/postgres
+
+volumes:
+  pgdata:
