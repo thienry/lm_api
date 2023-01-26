@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Alias {
+  id           String  @id @default(cuid())
+  aliasId      String  @unique
+  description  String
+  extraInfo    String?
+  isRestricted Boolean @default(false)
+
+  // relations
+  locales Locale[]
+  user    User?    @relation(fields: [userId], references: [id])
+  userId  String?
+
+  // timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Locale {
+  id                        String  @id @default(cuid())
+  localeId                  String  @unique
+  displayName               String
+  languageCode              String
+  nativeLanguageDescription String
+  extraInfo                 String?
+
+  // relations
+  aliases  Alias[]
+  mappings LocalesOnMappings[]
+  user     User?               @relation(fields: [userId], references: [id])
+  userId   String?
+
+  // timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LocalesOnMappings {
+  locale    Locale  @relation(fields: [localeId], references: [id])
+  localeId  String
+  mapping   Mapping @relation(fields: [mappingId], references: [id])
+  mappingId String
+
+  value String
+
+  // timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([localeId, mappingId])
+}
+
+model Mapping {
+  id     String  @id @default(cuid())
+  key    String  @unique
+  script String?
+
+  // relations
+  role    Role?               @relation(fields: [roleId], references: [id])
+  roleId  String?
+  locales LocalesOnMappings[]
+  user    User?               @relation(fields: [userId], references: [id])
+  userId  String?
+
+  // timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id       String @id @default(cuid())
+  name     String
+  surname  String
+  login    String @unique
+  email    String @unique
+  password String
+
+  // relations
+  roles    Role[]
+  aliases  Alias[]
+  locales  Locale[]
+  mappings Mapping[]
+
+  // timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+
+  // relations
+  users    User[]
+  mappings Mapping[]
+
+  // timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
