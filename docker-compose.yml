@@ -3,7 +3,9 @@ version: '3'
 services:
   app:
     build: .
-    container_name: locale-mapper-api
+    container_name: lm-api
+    ports:
+      - 3000:3000
     volumes:
       - .:/home/node/app
   

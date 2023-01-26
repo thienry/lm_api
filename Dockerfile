@@ -1,7 +1,13 @@
 FROM node:slim
 
-USER node
-
 WORKDIR /home/node/app
 
-CMD [ "tail", "-f", "/dev/null" ]
+COPY package.json ./
+
+RUN npm i
+
+COPY . .
+
+EXPOSE 3000
+
+CMD [ "npm", "run", "start:dev" ]
