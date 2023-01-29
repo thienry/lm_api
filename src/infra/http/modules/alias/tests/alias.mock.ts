@@ -15,3 +15,7 @@ export const createAliasInput: CreateAliasDto = {
 export async function findAliasByAliasID(aliasID: string): Promise<AliasDto> {
   return prisma.alias.findFirst({ where: { aliasId: aliasID } })
 }
+
+export async function listAliases(): Promise<AliasDto[]> {
+  return prisma.alias.findMany()
+}
