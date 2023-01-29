@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional, PartialType, PickType } from '@nestjs/swagger'
 import { IsBoolean, IsDefined, IsOptional, IsString } from 'class-validator'
 
 import { AliasEntity } from '@app/entities/alias.entity'
@@ -35,3 +35,5 @@ export class CreateAliasDto extends PickType(AliasDto, [
   @ApiProperty()
   userId: string
 }
+
+export class UpdateAliasDto extends PartialType(CreateAliasDto) {}

@@ -9,7 +9,8 @@ import { FindAliasUseCase } from '../usecases/find-alias.usecase'
 import { ListAliasesUseCase } from '../usecases/list-alias.usecase'
 import { PrismaService } from '@infra/database/prisma/prisma.service'
 import { CreateAliasUseCase } from '../usecases/create-alias.usecase'
-import { createAliasInput, findAliasByAliasID, listAliases } from './alias.mock'
+import { UpdateAliasUseCase } from '../usecases/update-alias.usecase'
+import { createAliasInput, findAliasByAliasID, listAliases, updateAliasInput } from './alias.mock'
 
 let alias: AliasDto
 let app: INestApplication
@@ -19,7 +20,7 @@ beforeAll(async () => {
   const moduleFixture: TestingModule = await Test.createTestingModule({
     imports: [DatabaseModule],
     controllers: [AliasController],
-    providers: [CreateAliasUseCase, ListAliasesUseCase, FindAliasUseCase],
+    providers: [CreateAliasUseCase, ListAliasesUseCase, FindAliasUseCase, UpdateAliasUseCase],
   }).compile()
 
   prisma = moduleFixture.get(PrismaService)
@@ -62,7 +63,7 @@ describe('List Aliases unit tests', () => {
   })
 })
 
-describe('Find Alias  unit tests', () => {
+describe('Find Alias unit tests', () => {
   it('should find an specific alias by aliasId', async () => {
     const response = await request(app.getHttpServer()).get(`/aliases/${alias.aliasId}`).expect(200)
     const aliasFound = await findAliasByAliasID(alias.aliasId)
@@ -70,10 +71,27 @@ describe('Find Alias  unit tests', () => {
     expect(response.body).toEqual(
       expect.objectContaining({
         aliasId: aliasFound.aliasId,
-        description: aliasFound.description,
         extraInfo: aliasFound.extraInfo,
+        description: aliasFound.description,
         isRestricted: aliasFound.isRestricted,
-        userId: aliasFound.userId,
+      }),
+    )
+  })
+})
+
+describe('Update Alias unit tests', () => {
+  it('should update an alias', async () => {
+    const response = await request(app.getHttpServer())
+      .put(`/aliases/${alias.aliasId}`)
+      .send(updateAliasInput)
+      .expect(200)
+
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        aliasId: updateAliasInput.aliasId,
+        extraInfo: updateAliasInput.extraInfo,
+        description: updateAliasInput.description,
+        isRestricted: updateAliasInput.isRestricted,
       }),
     )
   })

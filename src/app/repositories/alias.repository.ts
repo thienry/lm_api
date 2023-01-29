@@ -1,4 +1,4 @@
-import { AliasDto, CreateAliasDto } from '@app/dtos/alias.dto'
+import { AliasDto, CreateAliasDto, UpdateAliasDto } from '@app/dtos/alias.dto'
 
 export abstract class AliasRepository {
   /**
@@ -20,4 +20,11 @@ export abstract class AliasRepository {
    * @returns The alias found.
    */
   abstract findByAliasId(aliasId: string): Promise<AliasDto>
+
+  /**
+   * Update an alias by aliasID.
+   * @param aliasId An aliasID.
+   * @returns The alias found.
+   */
+  abstract update(aliasId: string, alias: UpdateAliasDto): Promise<AliasDto>
 }

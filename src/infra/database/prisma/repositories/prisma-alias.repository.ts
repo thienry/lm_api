@@ -18,10 +18,15 @@ export class PrismaAliasRepository implements AliasRepository {
     return this.prismaService.alias.findMany()
   }
 
-  /** @inheritdoc  */
+  /** @inheritdoc */
   findByAliasId(aliasId: string): Promise<AliasDto> {
     return this.prismaService.alias.findFirst({
       where: { aliasId: { equals: aliasId, mode: 'insensitive' } },
     })
+  }
+
+  /** @inheritdoc */
+  update(aliasId: string, alias: AliasDto): Promise<AliasDto> {
+    return this.prismaService.alias.update({ data: alias, where: { aliasId } })
   }
 }

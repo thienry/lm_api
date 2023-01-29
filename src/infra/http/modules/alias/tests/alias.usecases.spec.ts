@@ -7,25 +7,28 @@ import { FindAliasUseCase } from '../usecases/find-alias.usecase'
 import { ListAliasesUseCase } from '../usecases/list-alias.usecase'
 import { PrismaService } from '@infra/database/prisma/prisma.service'
 import { CreateAliasUseCase } from '../usecases/create-alias.usecase'
-import { createAliasInput, findAliasByAliasID, listAliases } from './alias.mock'
+import { UpdateAliasUseCase } from '../usecases/update-alias.usecase'
+import { createAliasInput, findAliasByAliasID, listAliases, updateAliasInput } from './alias.mock'
 
 let alias: AliasDto
 let prisma: PrismaService
 let findAliasUseCase: FindAliasUseCase
 let createAliasUseCase: CreateAliasUseCase
 let listAliasesUseCase: ListAliasesUseCase
+let updateAliasUseCase: UpdateAliasUseCase
 
 beforeAll(async () => {
   const moduleFixture: TestingModule = await Test.createTestingModule({
     imports: [DatabaseModule],
     controllers: [AliasController],
-    providers: [CreateAliasUseCase, ListAliasesUseCase, FindAliasUseCase],
+    providers: [CreateAliasUseCase, ListAliasesUseCase, FindAliasUseCase, UpdateAliasUseCase],
   }).compile()
 
   prisma = moduleFixture.get(PrismaService)
   findAliasUseCase = moduleFixture.get(FindAliasUseCase)
   createAliasUseCase = moduleFixture.get(CreateAliasUseCase)
   listAliasesUseCase = moduleFixture.get(ListAliasesUseCase)
+  updateAliasUseCase = moduleFixture.get(UpdateAliasUseCase)
 })
 
 afterAll(async () => {
@@ -60,5 +63,20 @@ describe('FindAliasUseCase unit tests', () => {
     const aliasFound = await findAliasByAliasID(alias.aliasId)
 
     expect(alias).toEqual(aliasFound)
+  })
+})
+
+describe('UpdateAliasUseCase unit tests', () => {
+  it('should update an alias', async () => {
+    const updatedAlias = await updateAliasUseCase.execute(alias.aliasId, updateAliasInput)
+
+    expect(updatedAlias).toEqual(
+      expect.objectContaining({
+        aliasId: updateAliasInput.aliasId,
+        extraInfo: updateAliasInput.extraInfo,
+        description: updateAliasInput.description,
+        isRestricted: updateAliasInput.isRestricted,
+      }),
+    )
   })
 })
