@@ -5,7 +5,7 @@ import { AliasDto, CreateAliasDto } from '@app/dtos/alias.dto'
 import { CreateAliasUseCase } from './usecases/create-alias.usecase'
 
 @ApiTags('Alias')
-@Controller('alias')
+@Controller('aliases')
 export class AliasController {
   constructor(private readonly createAliasUseCase: CreateAliasUseCase) {}
 
