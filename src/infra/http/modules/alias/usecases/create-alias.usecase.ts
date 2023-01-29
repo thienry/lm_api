@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import { Usecase } from '@app/usecase/usecase.interface'
+import { Usecase } from '@app/usecases/usecase.interface'
 import { AliasDto, CreateAliasDto } from '@app/dtos/alias.dto'
 import { AliasRepository } from '@app/repositories/alias.repository'
 
