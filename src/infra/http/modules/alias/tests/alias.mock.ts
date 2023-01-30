@@ -18,6 +18,8 @@ export const updateAliasInput: UpdateAliasDto = {
   isRestricted: true,
   extraInfo: 'Some extra info',
   description: 'Latin American locales update',
+  userId: 'cldhewanw0000tttnf0t2rhyj',
+  locales: [],
 }
 
 export async function findAliasByAliasID(aliasID: string): Promise<AliasDto> {

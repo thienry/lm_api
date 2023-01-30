@@ -13,7 +13,7 @@ export class PrismaAliasRepository implements AliasRepository {
     return this.prismaService.alias.create({
       data: {
         ...alias,
-        locales: { connect: alias.locales.map(locale => ({ localeId: locale.localeId })) },
+        locales: { connect: alias?.locales?.map(locale => ({ localeId: locale.localeId })) },
       },
       include: { locales: true },
     })
@@ -38,7 +38,7 @@ export class PrismaAliasRepository implements AliasRepository {
       data: {
         ...alias,
         locales: {
-          connect: alias.locales.map(locale => ({ localeId: locale.localeId })),
+          connect: alias?.locales?.map(locale => ({ localeId: locale.localeId })),
           disconnect: await this.getDisconnectLocaleOnAlias(alias),
         },
       },
@@ -62,6 +62,10 @@ export class PrismaAliasRepository implements AliasRepository {
     aliasToUpdate: AliasDto,
   ): Promise<{ localeId: string }[]> {
     const alias = await this.findByAliasId(aliasToUpdate.aliasId)
+
+    if (!alias?.locales?.length) {
+      return []
+    }
 
     const aliasLocales = alias.locales.map(locale => ({ localeId: locale.localeId }))
     const localesToUpdate = aliasToUpdate.locales.map(locale => ({ localeId: locale.localeId }))
