@@ -3,7 +3,6 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { AliasController } from '../alias.controller'
 import { AliasDto, CreateAliasDto } from '@app/dtos/alias.dto'
 import { DatabaseModule } from '@infra/database/database.module'
-import { PrismaService } from '@infra/database/prisma/prisma.service'
 import { createAliasInput, findAliasByAliasID, listAliases, updateAliasInput } from './alias.mock'
 import {
   FindAliasUseCase,

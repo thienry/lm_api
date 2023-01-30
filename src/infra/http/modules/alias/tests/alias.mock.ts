@@ -10,6 +10,7 @@ export const createAliasInput: CreateAliasDto = {
   extraInfo: 'some extra info',
   isRestricted: false,
   userId: 'cldhewanw0000tttnf0t2rhyj',
+  locales: [],
 }
 
 export const updateAliasInput: UpdateAliasDto = {
@@ -20,9 +21,9 @@ export const updateAliasInput: UpdateAliasDto = {
 }
 
 export async function findAliasByAliasID(aliasID: string): Promise<AliasDto> {
-  return prisma.alias.findFirst({ where: { aliasId: aliasID } })
+  return prisma.alias.findFirst({ where: { aliasId: aliasID }, include: { locales: true } })
 }
 
 export async function listAliases(): Promise<AliasDto[]> {
-  return prisma.alias.findMany()
+  return prisma.alias.findMany({ include: { locales: true } })
 }

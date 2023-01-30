@@ -9,10 +9,10 @@ export class DeleteAliasUseCase {
 
   /**
    * Performs the deletion of a given alias.
-   * @param aliasId AliasId of the alias passed.
+   * @param is ID of the alias passed.
    * @returns The alias deleted.
    */
-  async execute(aliasId: string): Promise<AliasDto> {
-    return this.aliasRepository.delete(aliasId)
+  async execute(id: string): Promise<AliasDto> {
+    return this.aliasRepository.delete(id)
   }
 }

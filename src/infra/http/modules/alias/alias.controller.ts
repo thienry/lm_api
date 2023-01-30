@@ -23,12 +23,12 @@ export class AliasController {
 
   /**
    * Creates new alias.
-   * @params aliasData - Alias data.
+   * @param aliasData - Alias data.
    * @returns The alias created.
    */
   @Post()
   @ApiBody({ type: CreateAliasDto })
-  @ApiCreatedResponse({ type: AliasDto, description: 'The alias has been successfully created.' })
+  @ApiCreatedResponse({ type: AliasDto })
   async createAlias(@Body() aliasData: CreateAliasDto): Promise<AliasDto> {
     return this.createAliasUseCase.execute(aliasData)
   }
@@ -45,7 +45,7 @@ export class AliasController {
 
   /**
    * Find an Alias.
-   * @params aliasID - AliasID.
+   * @param aliasID - AliasID.
    * @returns The alias found.
    */
   @Get(':aliasId')
@@ -56,12 +56,12 @@ export class AliasController {
 
   /**
    * Update an alias.
-   * @params aliasData - Alias data.
+   * @param aliasData - Alias data.
    * @returns The alias updated.
    */
   @Put(':aliasId')
   @ApiBody({ type: UpdateAliasDto })
-  @ApiOkResponse({ type: AliasDto, description: 'The alias has been successfully updated.' })
+  @ApiOkResponse({ type: AliasDto })
   async updateAlias(
     @Param('aliasId') aliasId: string,
     @Body() aliasData: UpdateAliasDto,
@@ -71,12 +71,12 @@ export class AliasController {
 
   /**
    * Delete an alias.
-   * @params aliasData - Alias data.
+   * @param id - Alias data.
    * @returns The alias deleted.
    */
-  @Delete(':aliasId')
-  @ApiOkResponse({ type: AliasDto, description: 'The alias has been successfully deleted.' })
-  async deleteAlias(@Param('aliasId') aliasId: string): Promise<AliasDto> {
-    return this.deleteAliasUseCase.execute(aliasId)
+  @Delete(':id')
+  @ApiOkResponse({ type: AliasDto })
+  async deleteAlias(@Param('id') id: string): Promise<AliasDto> {
+    return this.deleteAliasUseCase.execute(id)
   }
 }
