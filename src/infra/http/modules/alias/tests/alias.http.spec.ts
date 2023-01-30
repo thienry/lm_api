@@ -5,32 +5,33 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { AliasDto } from '@app/dtos/alias.dto'
 import { AliasController } from '../alias.controller'
 import { DatabaseModule } from '@infra/database/database.module'
-import { FindAliasUseCase } from '../usecases/find-alias.usecase'
-import { ListAliasesUseCase } from '../usecases/list-alias.usecase'
-import { PrismaService } from '@infra/database/prisma/prisma.service'
-import { CreateAliasUseCase } from '../usecases/create-alias.usecase'
-import { UpdateAliasUseCase } from '../usecases/update-alias.usecase'
 import { createAliasInput, findAliasByAliasID, listAliases, updateAliasInput } from './alias.mock'
+import {
+  FindAliasUseCase,
+  CreateAliasUseCase,
+  DeleteAliasUseCase,
+  ListAliasesUseCase,
+  UpdateAliasUseCase,
+} from '../usecases'
 
 let alias: AliasDto
 let app: INestApplication
-let prisma: PrismaService
 
 beforeAll(async () => {
   const moduleFixture: TestingModule = await Test.createTestingModule({
     imports: [DatabaseModule],
     controllers: [AliasController],
-    providers: [CreateAliasUseCase, ListAliasesUseCase, FindAliasUseCase, UpdateAliasUseCase],
+    providers: [
+      FindAliasUseCase,
+      CreateAliasUseCase,
+      ListAliasesUseCase,
+      UpdateAliasUseCase,
+      DeleteAliasUseCase,
+    ],
   }).compile()
 
-  prisma = moduleFixture.get(PrismaService)
   app = moduleFixture.createNestApplication()
   await app.init()
-})
-
-afterAll(async () => {
-  await prisma.alias.delete({ where: { id: alias.id } })
-  await prisma.$disconnect()
 })
 
 describe('Create Alias', () => {
@@ -52,6 +53,11 @@ describe('Create Alias', () => {
         userId: createAliasInput.userId,
       }),
     )
+  })
+
+  it('should not create an alias', async () => {
+    const response = await request(app.getHttpServer()).post('/aliases').send({})
+    expect(response.statusCode).toBe(500)
   })
 })
 
@@ -94,5 +100,25 @@ describe('Update Alias unit tests', () => {
         isRestricted: updateAliasInput.isRestricted,
       }),
     )
+  })
+})
+
+describe('DeleteAliasUseCase unit tests', () => {
+  it('should delete an alias', async () => {
+    const response = await request(app.getHttpServer()).delete(`/aliases/${alias.id}`).expect(200)
+
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        aliasId: updateAliasInput.aliasId,
+        extraInfo: updateAliasInput.extraInfo,
+        description: updateAliasInput.description,
+        isRestricted: updateAliasInput.isRestricted,
+      }),
+    )
+  })
+
+  it('should not delete an alias', async () => {
+    const response = await request(app.getHttpServer()).delete(`/aliases/invalid_aliasId`)
+    expect(response.statusCode).toBe(500)
   })
 })

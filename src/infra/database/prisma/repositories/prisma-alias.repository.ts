@@ -14,19 +14,24 @@ export class PrismaAliasRepository implements AliasRepository {
   }
 
   /** @inheritdoc */
-  list(): Promise<AliasDto[]> {
+  async list(): Promise<AliasDto[]> {
     return this.prismaService.alias.findMany()
   }
 
   /** @inheritdoc */
-  findByAliasId(aliasId: string): Promise<AliasDto> {
+  async findByAliasId(aliasId: string): Promise<AliasDto> {
     return this.prismaService.alias.findFirst({
       where: { aliasId: { equals: aliasId, mode: 'insensitive' } },
     })
   }
 
   /** @inheritdoc */
-  update(aliasId: string, alias: AliasDto): Promise<AliasDto> {
+  async update(aliasId: string, alias: AliasDto): Promise<AliasDto> {
     return this.prismaService.alias.update({ data: alias, where: { aliasId } })
+  }
+
+  /** @inheritdoc */
+  async delete(id: string): Promise<AliasDto> {
+    return this.prismaService.alias.delete({ where: { id } })
   }
 }

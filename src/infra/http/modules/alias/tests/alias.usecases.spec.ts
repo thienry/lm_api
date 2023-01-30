@@ -3,37 +3,41 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { AliasController } from '../alias.controller'
 import { AliasDto, CreateAliasDto } from '@app/dtos/alias.dto'
 import { DatabaseModule } from '@infra/database/database.module'
-import { FindAliasUseCase } from '../usecases/find-alias.usecase'
-import { ListAliasesUseCase } from '../usecases/list-alias.usecase'
 import { PrismaService } from '@infra/database/prisma/prisma.service'
-import { CreateAliasUseCase } from '../usecases/create-alias.usecase'
-import { UpdateAliasUseCase } from '../usecases/update-alias.usecase'
 import { createAliasInput, findAliasByAliasID, listAliases, updateAliasInput } from './alias.mock'
+import {
+  FindAliasUseCase,
+  CreateAliasUseCase,
+  DeleteAliasUseCase,
+  ListAliasesUseCase,
+  UpdateAliasUseCase,
+} from '../usecases'
 
 let alias: AliasDto
-let prisma: PrismaService
 let findAliasUseCase: FindAliasUseCase
 let createAliasUseCase: CreateAliasUseCase
 let listAliasesUseCase: ListAliasesUseCase
 let updateAliasUseCase: UpdateAliasUseCase
+let deleteAliasUseCase: DeleteAliasUseCase
 
 beforeAll(async () => {
   const moduleFixture: TestingModule = await Test.createTestingModule({
     imports: [DatabaseModule],
     controllers: [AliasController],
-    providers: [CreateAliasUseCase, ListAliasesUseCase, FindAliasUseCase, UpdateAliasUseCase],
+    providers: [
+      FindAliasUseCase,
+      CreateAliasUseCase,
+      ListAliasesUseCase,
+      UpdateAliasUseCase,
+      DeleteAliasUseCase,
+    ],
   }).compile()
 
-  prisma = moduleFixture.get(PrismaService)
   findAliasUseCase = moduleFixture.get(FindAliasUseCase)
   createAliasUseCase = moduleFixture.get(CreateAliasUseCase)
   listAliasesUseCase = moduleFixture.get(ListAliasesUseCase)
   updateAliasUseCase = moduleFixture.get(UpdateAliasUseCase)
-})
-
-afterAll(async () => {
-  await prisma.alias.delete({ where: { id: alias.id } })
-  await prisma.$disconnect()
+  deleteAliasUseCase = moduleFixture.get(DeleteAliasUseCase)
 })
 
 describe('CreateAliasUseCase unit tests', () => {
@@ -78,5 +82,24 @@ describe('UpdateAliasUseCase unit tests', () => {
         isRestricted: updateAliasInput.isRestricted,
       }),
     )
+  })
+})
+
+describe('DeleteAliasUseCase unit tests', () => {
+  it('should delete an alias', async () => {
+    const aliasDeleted = await deleteAliasUseCase.execute(alias.id)
+
+    expect(aliasDeleted).toEqual(
+      expect.objectContaining({
+        aliasId: updateAliasInput.aliasId,
+        extraInfo: updateAliasInput.extraInfo,
+        description: updateAliasInput.description,
+        isRestricted: updateAliasInput.isRestricted,
+      }),
+    )
+  })
+
+  it('should not delete an alias', async () => {
+    expect(deleteAliasUseCase.execute('invalid_alias')).rejects.toThrow()
   })
 })

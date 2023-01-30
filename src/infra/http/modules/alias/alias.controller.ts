@@ -1,11 +1,14 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 
-import { FindAliasUseCase } from './usecases/find-alias.usecase'
-import { ListAliasesUseCase } from './usecases/list-alias.usecase'
-import { CreateAliasUseCase } from './usecases/create-alias.usecase'
-import { UpdateAliasUseCase } from './usecases/update-alias.usecase'
 import { AliasDto, CreateAliasDto, UpdateAliasDto } from '@app/dtos/alias.dto'
+import {
+  FindAliasUseCase,
+  CreateAliasUseCase,
+  DeleteAliasUseCase,
+  ListAliasesUseCase,
+  UpdateAliasUseCase,
+} from './usecases'
 
 @ApiTags('Alias')
 @Controller('aliases')
@@ -15,6 +18,7 @@ export class AliasController {
     private readonly createAliasUseCase: CreateAliasUseCase,
     private readonly listAliasesUseCase: ListAliasesUseCase,
     private readonly updateAliasUseCase: UpdateAliasUseCase,
+    private readonly deleteAliasUseCase: DeleteAliasUseCase,
   ) {}
 
   /**
@@ -51,9 +55,9 @@ export class AliasController {
   }
 
   /**
-   * Creates new alias.
+   * Update an alias.
    * @params aliasData - Alias data.
-   * @returns The alias created.
+   * @returns The alias updated.
    */
   @Put(':aliasId')
   @ApiBody({ type: UpdateAliasDto })
@@ -63,5 +67,16 @@ export class AliasController {
     @Body() aliasData: UpdateAliasDto,
   ): Promise<AliasDto> {
     return this.updateAliasUseCase.execute(aliasId, aliasData)
+  }
+
+  /**
+   * Delete an alias.
+   * @params aliasData - Alias data.
+   * @returns The alias deleted.
+   */
+  @Delete(':aliasId')
+  @ApiOkResponse({ type: AliasDto, description: 'The alias has been successfully deleted.' })
+  async deleteAlias(@Param('aliasId') aliasId: string): Promise<AliasDto> {
+    return this.deleteAliasUseCase.execute(aliasId)
   }
 }

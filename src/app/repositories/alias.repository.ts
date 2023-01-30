@@ -24,7 +24,14 @@ export abstract class AliasRepository {
   /**
    * Update an alias by aliasID.
    * @param aliasId An aliasID.
-   * @returns The alias found.
+   * @returns The alias updated.
    */
   abstract update(aliasId: string, alias: UpdateAliasDto): Promise<AliasDto>
+
+  /**
+   * Delete an alias by aliasID.
+   * @param id An ID.
+   * @returns The alias deleted.
+   */
+  abstract delete(id: string): Promise<AliasDto>
 }
