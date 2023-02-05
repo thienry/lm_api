@@ -27,7 +27,7 @@ export class PrismaAliasRepository implements AliasRepository {
   /** @inheritdoc */
   async findByAliasId(aliasId: string): Promise<AliasDto> {
     return this.prismaService.alias.findFirst({
-      where: { aliasId: { equals: aliasId, mode: 'insensitive' } },
+      where: { aliasId: { contains: aliasId, mode: 'insensitive' } },
       include: { locales: true },
     })
   }

@@ -12,4 +12,16 @@ export class PrismaLocaleRepository implements LocaleRepository {
   async create(locale: CreateLocaleDto): Promise<LocaleDto> {
     return this.prismaService.locale.create({ data: locale })
   }
+
+  /** @inheritdoc */
+  async list(): Promise<LocaleDto[]> {
+    return this.prismaService.locale.findMany()
+  }
+
+  /** @inheritdoc */
+  async findByLocaleId(localeId: string): Promise<LocaleDto> {
+    return this.prismaService.locale.findFirst({
+      where: { localeId: { contains: localeId, mode: 'insensitive' } },
+    })
+  }
 }
