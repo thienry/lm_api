@@ -1,4 +1,4 @@
-import { LocaleDto, CreateLocaleDto } from '@app/dtos/locale.dto'
+import { LocaleDto, CreateLocaleDto, UpdateLocaleDto } from '@app/dtos/locale.dto'
 
 export abstract class LocaleRepository {
   /**
@@ -20,4 +20,11 @@ export abstract class LocaleRepository {
    * @returns The locale found.
    */
   abstract findByLocaleId(localeId: string): Promise<LocaleDto>
+
+  /**
+   * Update a locale by localeID.
+   * @param localeId - A localeID.
+   * @returns The locale updated.
+   */
+  abstract update(localeId: string, locale: UpdateLocaleDto): Promise<LocaleDto>
 }

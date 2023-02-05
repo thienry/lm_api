@@ -68,4 +68,4 @@ export class CreateLocaleDto extends PickType(LocaleDto, [
   userId: string
 }
 
-export class UpdateAliasDto extends PartialType(CreateLocaleDto) {}
+export class UpdateLocaleDto extends PartialType(CreateLocaleDto) {}

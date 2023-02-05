@@ -1,8 +1,13 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
 import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 
-import { CreateLocaleDto, LocaleDto } from '@app/dtos/locale.dto'
-import { CreateLocaleUseCase, FindLocaleUseCase, ListLocalesUseCase } from './usecases'
+import { CreateLocaleDto, LocaleDto, UpdateLocaleDto } from '@app/dtos/locale.dto'
+import {
+  CreateLocaleUseCase,
+  FindLocaleUseCase,
+  ListLocalesUseCase,
+  UpdateLocaleUseCase,
+} from './usecases'
 
 @ApiTags('Locale')
 @Controller('locales')
@@ -11,6 +16,7 @@ export class LocaleController {
     private readonly findLocaleUseCase: FindLocaleUseCase,
     private readonly listLocalesUseCase: ListLocalesUseCase,
     private readonly createLocaleUseCase: CreateLocaleUseCase,
+    private readonly updateLocaleUseCase: UpdateLocaleUseCase,
   ) {}
 
   /**
@@ -44,5 +50,20 @@ export class LocaleController {
   @ApiOkResponse({ type: LocaleDto })
   async findLocale(@Param('localeId') localeId: string): Promise<LocaleDto> {
     return this.findLocaleUseCase.execute(localeId)
+  }
+
+  /**
+   * Update a locale.
+   * @param localeData - Locale data.
+   * @returns The locale updated.
+   */
+  @Put(':localeId')
+  @ApiBody({ type: UpdateLocaleDto })
+  @ApiOkResponse({ type: LocaleDto })
+  async updateLocale(
+    @Param('localeId') localeId: string,
+    @Body() localeData: UpdateLocaleDto,
+  ): Promise<LocaleDto> {
+    return this.updateLocaleUseCase.execute(localeId, localeData)
   }
 }
