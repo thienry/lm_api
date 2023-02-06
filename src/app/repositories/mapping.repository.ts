@@ -39,4 +39,11 @@ export abstract class MappingRepository {
    * @returns The mapping updated.
    */
   abstract update(key: string, mapping: UpdateMappingDto): Promise<MappingDto>
+
+  /**
+   * Delete a mapping by ID.
+   * @param id - An ID.
+   * @returns The mapping deleted.
+   */
+  abstract delete(id: string): Promise<MappingDto>
 }

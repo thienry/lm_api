@@ -42,4 +42,9 @@ export class PrismaMappingRepository implements MappingRepository {
       data: { ...mapping },
     })
   }
+
+  /** @inheritdoc */
+  async delete(id: string): Promise<MappingDto> {
+    return this.prismaService.mapping.delete({ where: { id } })
+  }
 }

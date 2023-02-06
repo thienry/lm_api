@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 
 import { CreateMappingDto, MappingDto, UpdateMappingDto } from '@app/dtos/mapping.dto'
@@ -8,6 +8,7 @@ import {
   ListMappingsUseCase,
   ListMappingsScriptsUseCase,
   UpdateMappingUseCase,
+  DeleteMappingUseCase,
 } from './usecases'
 
 @ApiTags('Mapping')
@@ -19,6 +20,7 @@ export class MappingController {
     private readonly findMappingUseCase: FindMappingUseCase,
     private readonly listMappingsScriptsUseCase: ListMappingsScriptsUseCase,
     private readonly updateMappingUseCase: UpdateMappingUseCase,
+    private readonly deleteMappingUseCase: DeleteMappingUseCase,
   ) {}
 
   /**
@@ -77,5 +79,16 @@ export class MappingController {
     @Body() mappingData: UpdateMappingDto,
   ): Promise<MappingDto> {
     return this.updateMappingUseCase.execute(key, mappingData)
+  }
+
+  /**
+   * Delete a mapping.
+   * @param id - an ID.
+   * @returns The mapping deleted.
+   */
+  @Delete(':id')
+  @ApiOkResponse({ type: MappingDto })
+  async deleteMapping(@Param('id') id: string): Promise<MappingDto> {
+    return this.deleteMappingUseCase.execute(id)
   }
 }

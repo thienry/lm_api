@@ -4,6 +4,7 @@ import { MappingController } from './mapping.controller'
 import { DatabaseModule } from '@infra/database/database.module'
 import { CreateMappingUseCase } from './usecases/create-mapping.usecase'
 import {
+  DeleteMappingUseCase,
   FindMappingUseCase,
   ListMappingsScriptsUseCase,
   ListMappingsUseCase,
@@ -19,6 +20,7 @@ import {
     ListMappingsUseCase,
     ListMappingsScriptsUseCase,
     UpdateMappingUseCase,
+    DeleteMappingUseCase,
   ],
 })
 export class MappingModule {}
