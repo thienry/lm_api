@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 
 import { PrismaService } from '../prisma.service'
-import { CreateLocaleDto, LocaleDto, UpdateLocaleDto } from '@app/dtos/locale.dto'
 import { LocaleRepository } from '@app/repositories/locale.repository'
+import { CreateLocaleDto, LocaleDto, UpdateLocaleDto } from '@app/dtos/locale.dto'
 
 @Injectable()
 export class PrismaLocaleRepository implements LocaleRepository {
