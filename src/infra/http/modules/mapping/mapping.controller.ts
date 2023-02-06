@@ -1,12 +1,13 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
 import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 
-import { CreateMappingDto, MappingDto } from '@app/dtos/mapping.dto'
+import { CreateMappingDto, MappingDto, UpdateMappingDto } from '@app/dtos/mapping.dto'
 import {
   CreateMappingUseCase,
   FindMappingUseCase,
   ListMappingsUseCase,
   ListMappingsScriptsUseCase,
+  UpdateMappingUseCase,
 } from './usecases'
 
 @ApiTags('Mapping')
@@ -17,6 +18,7 @@ export class MappingController {
     private readonly listMappingsUseCase: ListMappingsUseCase,
     private readonly findMappingUseCase: FindMappingUseCase,
     private readonly listMappingsScriptsUseCase: ListMappingsScriptsUseCase,
+    private readonly updateMappingUseCase: UpdateMappingUseCase,
   ) {}
 
   /**
@@ -60,5 +62,20 @@ export class MappingController {
   @ApiOkResponse({ type: MappingDto })
   async findMapping(@Param('key') key: string): Promise<MappingDto> {
     return this.findMappingUseCase.execute(key)
+  }
+
+  /**
+   * Update a mapping.
+   * @param mappingData - Mapping data.
+   * @returns The mapping updated.
+   */
+  @Put(':key')
+  @ApiBody({ type: UpdateMappingDto })
+  @ApiOkResponse({ type: MappingDto })
+  async updateMapping(
+    @Param('key') key: string,
+    @Body() mappingData: UpdateMappingDto,
+  ): Promise<MappingDto> {
+    return this.updateMappingUseCase.execute(key, mappingData)
   }
 }

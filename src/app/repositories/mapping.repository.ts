@@ -1,4 +1,9 @@
-import { CreateMappingDto, MappingDto, MappingScriptDto } from '@app/dtos/mapping.dto'
+import {
+  CreateMappingDto,
+  MappingDto,
+  MappingScriptDto,
+  UpdateMappingDto,
+} from '@app/dtos/mapping.dto'
 
 export abstract class MappingRepository {
   /**
@@ -26,4 +31,12 @@ export abstract class MappingRepository {
    * @returns A list of mappings scripts.
    */
   abstract listScripts(): Promise<MappingScriptDto[]>
+
+  /**
+   * Update a mapping by key.
+   * @param key - A key of the mapping.
+   * @param mapping - Mapping to update.
+   * @returns The mapping updated.
+   */
+  abstract update(key: string, mapping: UpdateMappingDto): Promise<MappingDto>
 }

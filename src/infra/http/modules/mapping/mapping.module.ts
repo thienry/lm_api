@@ -3,7 +3,12 @@ import { Module } from '@nestjs/common'
 import { MappingController } from './mapping.controller'
 import { DatabaseModule } from '@infra/database/database.module'
 import { CreateMappingUseCase } from './usecases/create-mapping.usecase'
-import { FindMappingUseCase, ListMappingsScriptsUseCase, ListMappingsUseCase } from './usecases'
+import {
+  FindMappingUseCase,
+  ListMappingsScriptsUseCase,
+  ListMappingsUseCase,
+  UpdateMappingUseCase,
+} from './usecases'
 
 @Module({
   imports: [DatabaseModule],
@@ -13,6 +18,7 @@ import { FindMappingUseCase, ListMappingsScriptsUseCase, ListMappingsUseCase } f
     FindMappingUseCase,
     ListMappingsUseCase,
     ListMappingsScriptsUseCase,
+    UpdateMappingUseCase,
   ],
 })
 export class MappingModule {}

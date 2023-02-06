@@ -2,7 +2,12 @@ import { Injectable } from '@nestjs/common'
 
 import { PrismaService } from '../prisma.service'
 import { MappingRepository } from '@app/repositories/mapping.repository'
-import { CreateMappingDto, MappingDto, MappingScriptDto } from '@app/dtos/mapping.dto'
+import {
+  CreateMappingDto,
+  MappingDto,
+  MappingScriptDto,
+  UpdateMappingDto,
+} from '@app/dtos/mapping.dto'
 
 @Injectable()
 export class PrismaMappingRepository implements MappingRepository {
@@ -28,5 +33,13 @@ export class PrismaMappingRepository implements MappingRepository {
   /** @inheritdoc */
   async listScripts(): Promise<MappingScriptDto[]> {
     return this.prismaService.mapping.findMany({ distinct: ['script'], select: { script: true } })
+  }
+
+  /** @inheritdoc */
+  async update(key: string, mapping: UpdateMappingDto): Promise<MappingDto> {
+    return this.prismaService.mapping.update({
+      where: { key },
+      data: { ...mapping },
+    })
   }
 }
