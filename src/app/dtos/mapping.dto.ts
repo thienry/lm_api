@@ -26,3 +26,5 @@ export class MappingDto extends MappingEntity {
 }
 
 export class CreateMappingDto extends PickType(MappingDto, ['key', 'script', 'roleId', 'userId']) {}
+
+export class MappingScriptDto extends PickType(MappingDto, ['script']) {}
