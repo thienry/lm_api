@@ -4,6 +4,7 @@ import { LocaleController } from './locale.controller'
 import { DatabaseModule } from '@infra/database/database.module'
 import {
   CreateLocaleUseCase,
+  DeleteLocaleUseCase,
   FindLocaleUseCase,
   ListLocalesUseCase,
   UpdateLocaleUseCase,
@@ -12,6 +13,12 @@ import {
 @Module({
   imports: [DatabaseModule],
   controllers: [LocaleController],
-  providers: [CreateLocaleUseCase, FindLocaleUseCase, ListLocalesUseCase, UpdateLocaleUseCase],
+  providers: [
+    CreateLocaleUseCase,
+    FindLocaleUseCase,
+    ListLocalesUseCase,
+    UpdateLocaleUseCase,
+    DeleteLocaleUseCase,
+  ],
 })
 export class LocaleModule {}

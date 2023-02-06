@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 
 import { CreateLocaleDto, LocaleDto, UpdateLocaleDto } from '@app/dtos/locale.dto'
@@ -7,6 +7,7 @@ import {
   FindLocaleUseCase,
   ListLocalesUseCase,
   UpdateLocaleUseCase,
+  DeleteLocaleUseCase,
 } from './usecases'
 
 @ApiTags('Locale')
@@ -17,6 +18,7 @@ export class LocaleController {
     private readonly listLocalesUseCase: ListLocalesUseCase,
     private readonly createLocaleUseCase: CreateLocaleUseCase,
     private readonly updateLocaleUseCase: UpdateLocaleUseCase,
+    private readonly deleteLocaleUseCase: DeleteLocaleUseCase,
   ) {}
 
   /**
@@ -65,5 +67,16 @@ export class LocaleController {
     @Body() localeData: UpdateLocaleDto,
   ): Promise<LocaleDto> {
     return this.updateLocaleUseCase.execute(localeId, localeData)
+  }
+
+  /**
+   * Delete a locale.
+   * @param id - an ID.
+   * @returns The locale deleted.
+   */
+  @Delete(':id')
+  @ApiOkResponse({ type: LocaleDto })
+  async deleteLocale(@Param('id') id: string): Promise<LocaleDto> {
+    return this.deleteLocaleUseCase.execute(id)
   }
 }

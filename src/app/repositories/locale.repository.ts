@@ -27,4 +27,11 @@ export abstract class LocaleRepository {
    * @returns The locale updated.
    */
   abstract update(localeId: string, locale: UpdateLocaleDto): Promise<LocaleDto>
+
+  /**
+   * Delete an alias by localeID.
+   * @param id - An ID.
+   * @returns The locale deleted.
+   */
+  abstract delete(id: string): Promise<LocaleDto>
 }

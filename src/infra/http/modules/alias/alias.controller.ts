@@ -71,7 +71,7 @@ export class AliasController {
 
   /**
    * Delete an alias.
-   * @param id - Alias data.
+   * @param id - an ID.
    * @returns The alias deleted.
    */
   @Delete(':id')

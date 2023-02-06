@@ -32,4 +32,9 @@ export class PrismaLocaleRepository implements LocaleRepository {
       data: { ...locale },
     })
   }
+
+  /** @inheritdoc */
+  async delete(id: string): Promise<LocaleDto> {
+    return this.prismaService.locale.delete({ where: { id } })
+  }
 }
