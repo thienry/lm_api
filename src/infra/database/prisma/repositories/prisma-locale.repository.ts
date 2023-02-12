@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { plainToInstance } from 'class-transformer'
 
 import { PrismaService } from '../prisma.service'
 import { LocaleRepository } from '@app/repositories/locale.repository'
@@ -19,7 +20,7 @@ export class PrismaLocaleRepository implements LocaleRepository {
       data: {
         ...locale,
         aliases: { connect: locale.aliases.map(alias => ({ aliasId: alias.aliasId })) },
-        // mappings: { create: locale.mappings.map(mapping => this.createMappingsInput(mapping)) },
+        mappings: { create: locale.mappings.map(mapping => this.createMappingsInput(mapping)) },
       },
       include: { aliases: true, mappings: true },
     })
@@ -48,6 +49,13 @@ export class PrismaLocaleRepository implements LocaleRepository {
           connect: locale.aliases.map(alias => ({ aliasId: alias.aliasId })),
           disconnect: await this.getDisconnectAliasOnLocale(locale),
         },
+        mappings: {
+          connectOrCreate: locale.mappings.map(mapping => ({
+            where: { localeId_mappingId: { localeId: locale.localeId, mappingId: mapping.id } },
+            create: this.createMappingsInput(mapping),
+          })),
+          disconnect: await this.getDisconnectMappingsOnLocale(locale),
+        },
       },
       include: { aliases: true, mappings: true },
     })
@@ -64,7 +72,8 @@ export class PrismaLocaleRepository implements LocaleRepository {
   /**
    * Handles the difference of the locales passed to update in the actual alias locales,
    * to disconnect the right locales from alias.
-   * @param aliasToUpdate - An alias to update
+   *
+   * @param aliasToUpdate - An alias to update.
    * @returns A list of localeIds with a difference to disconnect the locales on alias.
    */
   private async getDisconnectAliasOnLocale(
@@ -83,8 +92,34 @@ export class PrismaLocaleRepository implements LocaleRepository {
     )
   }
 
-  private getDisconnectMappingsOnLocale(locale: UpdateLocaleDto) {
-    return locale
+  /**
+   * Handles the difference of the locales passed to update in the actual mapping locales,
+   * to disconnect the right locales from mappings.
+   *
+   * @param localesToUpdate - A locale to update.
+   * @returns A list of localeId_mappinId with a difference to disconnect the locales on mappings.
+   */
+  private async getDisconnectMappingsOnLocale(
+    localeToUpdate: UpdateLocaleDto,
+  ): Promise<{ localeId_mappingId: { localeId: string; mappingId: string } }[]> {
+    const locale = await this.findByLocaleId(localeToUpdate.localeId)
+    if (!locale?.mappings?.length) {
+      return []
+    }
+
+    const localeMappings = plainToInstance(
+      UpsertLocaleMappingDto,
+      locale.mappings.map(mapping => mapping),
+    )
+    const mappingsToUpdate = localeToUpdate.mappings.map(mapping => mapping)
+
+    const localeMappingsFiltered = localeMappings.filter(
+      ({ id: item1 }) => !mappingsToUpdate.some(({ id: item2 }) => item2 === item1),
+    )
+
+    return localeMappingsFiltered.map(item => ({
+      localeId_mappingId: { localeId: locale.localeId, mappingId: item.id },
+    }))
   }
 
   /**

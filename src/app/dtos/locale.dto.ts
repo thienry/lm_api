@@ -6,7 +6,7 @@ import { AliasEntity } from '@app/entities/alias.entity'
 import { LocaleEntity } from '@app/entities/locale.entity'
 import { MappingEntity } from '@app/entities/mapping.entity'
 
-export class LocaleMappingDto extends PickType(MappingEntity, ['key', 'script']) {
+export class LocaleMappingDto {
   @ApiProperty()
   @IsString()
   @IsDefined()
@@ -52,9 +52,9 @@ export class LocaleDto extends LocaleEntity {
   @ApiPropertyOptional({ type: [UpsertLocaleAliasDto] })
   aliases: UpsertLocaleAliasDto[]
 
-  //@Type(() => LocaleMappingDto)
-  //@ApiPropertyOptional({ type: [LocaleMappingDto] })
-  //mappings: LocaleMappingDto[]
+  @Type(() => LocaleMappingDto)
+  @ApiPropertyOptional({ type: [LocaleMappingDto] })
+  mappings: LocaleMappingDto[]
 
   @ApiProperty()
   createdAt: Date
@@ -109,11 +109,11 @@ export class CreateLocaleDto extends PickType(LocaleDto, [
   @ApiProperty({ type: [UpsertLocaleAliasDto] })
   aliases: UpsertLocaleAliasDto[]
 
-  //@IsDefined()
-  //@IsArray()
-  //@Type(() => UpsertLocaleMappingDto)
-  //@ApiProperty({ type: [UpsertLocaleMappingDto] })
-  //mappings: UpsertLocaleMappingDto[]
+  @IsDefined()
+  @IsArray()
+  @Type(() => UpsertLocaleMappingDto)
+  @ApiProperty({ type: [UpsertLocaleMappingDto] })
+  mappings: UpsertLocaleMappingDto[]
 }
 
 export class UpdateLocaleDto extends PartialType(CreateLocaleDto) {}

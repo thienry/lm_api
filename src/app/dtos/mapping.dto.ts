@@ -1,6 +1,15 @@
-import { ApiProperty, PartialType, PickType } from '@nestjs/swagger'
+import { IsArray, IsString } from 'class-validator'
+import { ApiProperty, ApiPropertyOptional, PartialType, PickType } from '@nestjs/swagger'
 
+import { LocaleEntity } from '@app/entities/locale.entity'
 import { MappingEntity } from '@app/entities/mapping.entity'
+import { Type } from 'class-transformer'
+
+export class UpsertMappingLocaleDto extends PickType(LocaleEntity, ['localeId']) {
+  @ApiProperty()
+  @IsString()
+  localeId: string
+}
 
 export class MappingDto extends MappingEntity {
   @ApiProperty()
@@ -12,11 +21,18 @@ export class MappingDto extends MappingEntity {
   @ApiProperty()
   script: string
 
+  @ApiPropertyOptional()
+  value?: string
+
   @ApiProperty()
   roleId: string
 
   @ApiProperty()
   userId: string
+
+  @Type(() => UpsertMappingLocaleDto)
+  @ApiPropertyOptional({ type: [UpsertMappingLocaleDto] })
+  locales: UpsertMappingLocaleDto[]
 
   @ApiProperty()
   createdAt: Date
@@ -25,7 +41,31 @@ export class MappingDto extends MappingEntity {
   updatedAt: Date
 }
 
-export class CreateMappingDto extends PickType(MappingDto, ['key', 'script', 'roleId', 'userId']) {}
+export class CreateMappingDto extends PickType(MappingDto, ['key', 'script', 'roleId', 'userId']) {
+  @IsString()
+  @ApiProperty()
+  key: string
+
+  @IsString()
+  @ApiProperty()
+  value: string
+
+  @IsString()
+  @ApiProperty()
+  script: string
+
+  @IsString()
+  @ApiProperty()
+  roleId: string
+
+  @IsString()
+  @ApiProperty()
+  userId: string
+
+  @IsArray()
+  @ApiProperty()
+  locales: [{ localeId: string }]
+}
 
 export class MappingScriptDto extends PickType(MappingDto, ['script']) {}
 
