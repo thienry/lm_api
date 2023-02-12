@@ -5,8 +5,6 @@ import { ApiProperty, ApiPropertyOptional, OmitType, PartialType, PickType } fro
 import { AliasEntity } from '@app/entities/alias.entity'
 import { LocaleEntity } from '@app/entities/locale.entity'
 
-export class AliasLocaleDto extends LocaleEntity {}
-
 export class UpsertAliasLocaleDto extends OmitType(LocaleEntity, ['createdAt', 'updatedAt']) {
   @IsString()
   @IsOptional()

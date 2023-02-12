@@ -13,7 +13,7 @@ export class PrismaAliasRepository implements AliasRepository {
     return this.prismaService.alias.create({
       data: {
         ...alias,
-        locales: { connect: alias?.locales?.map(locale => ({ localeId: locale.localeId })) },
+        locales: { connect: alias.locales.map(locale => ({ localeId: locale.localeId })) },
       },
       include: { locales: true },
     })
